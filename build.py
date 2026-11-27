@@ -45,6 +45,9 @@ NEON_LINE_SVG = load_neon_line_svg()
 # MARKDOWN PARSER
 # ============================================================================
 
+DEFAULT_BADGE = 'one.design'  # wird in build_presentation mit dem Titel der Präsentation überschrieben
+
+
 class MarkdownPresentation:
     """Parse markdown file with YAML frontmatter per slide"""
 
@@ -246,7 +249,7 @@ class TitleSlideRenderer(SlideRenderer):
         subline = data.get('subline', '')
         illustration = data.get('illustration', '')
         highlight = data.get('highlight', None)
-        badge_text = data.get('badge', 'All Hands 2026')
+        badge_text = data.get('badge', DEFAULT_BADGE)
         cta_link = data.get('cta_link', None)
         cta_text = data.get('cta_text', None)
         qr_code = data.get('qr_code', None)
@@ -289,7 +292,7 @@ class WidePhotosRenderer(SlideRenderer):
         image_position = data.get('image_position', 'right')  # left or right
         photos = data.get('photos', [])
         highlight = data.get('highlight', None)
-        badge_text = data.get('badge', 'All Hands 2026')
+        badge_text = data.get('badge', DEFAULT_BADGE)
         cta_link = data.get('cta_link', None)
         cta_text = data.get('cta_text', None)
         qr_code = data.get('qr_code', None)
@@ -345,7 +348,7 @@ class ChartTextRenderer(SlideRenderer):
         chart_image = data.get('chart_image', '')
         chart_position = data.get('chart_position', 'left')  # left or right
         highlight = data.get('highlight', None)
-        badge_text = data.get('badge', 'All Hands 2026')
+        badge_text = data.get('badge', DEFAULT_BADGE)
         cta_link = data.get('cta_link', None)
         cta_text = data.get('cta_text', None)
         qr_code = data.get('qr_code', None)
@@ -396,7 +399,7 @@ class TeamGridRenderer(SlideRenderer):
         illustration = data.get('illustration', '')
         people = data.get('people', [])
         highlight = data.get('highlight', None)
-        badge_text = data.get('badge', 'All Hands 2026')
+        badge_text = data.get('badge', DEFAULT_BADGE)
         cta_link = data.get('cta_link', None)
         cta_text = data.get('cta_text', None)
         qr_code = data.get('qr_code', None)
@@ -457,7 +460,7 @@ class ThreeColumnsRenderer(SlideRenderer):
         headline = data.get('headline', '')
         columns = data.get('columns', [])
         highlight = data.get('highlight', None)
-        badge_text = data.get('badge', 'All Hands 2026')
+        badge_text = data.get('badge', DEFAULT_BADGE)
         cta_link = data.get('cta_link', None)
         cta_text = data.get('cta_text', None)
         qr_code = data.get('qr_code', None)
@@ -1075,6 +1078,10 @@ def build_presentation(markdown_path: str, output_path: str = 'index.html'):
 
     # Parse markdown
     pres = MarkdownPresentation(markdown_path)
+
+    # Standard-Badge: Titel der Präsentation (nicht ein fester Anlass)
+    global DEFAULT_BADGE
+    DEFAULT_BADGE = str(pres.metadata.get('badge') or pres.metadata.get('title') or 'one.design')
 
     # Render slides
     slides_html = []
