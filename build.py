@@ -268,7 +268,7 @@ class TitleSlideRenderer(SlideRenderer):
         qr_html = self.render_qr_code(qr_code) if illustration and qr_code else ''
 
         return f'''
-        <section class="slide title-slide">
+        <section class="slide title-slide{' has-illu' if illustration else ''}">
             <div class="badge-label">{self.escape_html(badge_text)}</div>
             <div class="title-content">
                 <h1>{headline_html}</h1>
@@ -744,6 +744,25 @@ HTML_TEMPLATE = '''<!DOCTYPE html>
         .title-illu {{
             max-width: 100%;
             max-height: 600px;
+        }}
+
+        /* Mit Illustration: größer, rechts bis an den Rand (kein Padding auf dieser Seite) */
+        .title-slide.has-illu {{
+            padding-right: 0;
+            grid-template-columns: 1.25fr 1fr;
+            gap: 20px;
+        }}
+
+        .title-slide.has-illu .title-illu-container {{
+            justify-content: flex-end;
+            align-self: stretch;
+        }}
+
+        .title-slide.has-illu .title-illu {{
+            max-height: 100%;
+            max-width: 100%;
+            object-fit: contain;
+            object-position: right center;
         }}
 
         /* Wide Photos Slide */
