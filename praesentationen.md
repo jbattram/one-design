@@ -3,7 +3,7 @@
 Du baust aus einer Markdown-Datei eine Präsentation als HTML-Datei. Die Folien haben ein festes 16:9-Format, man blättert mit den Pfeiltasten.
 
 ## Ablauf
-1. Frage nach Thema, Zielgruppe, Anlass und Umfang. Schlage eine Folienstruktur vor und lass sie bestätigen.
+1. Lege sofort los, ohne Rückfragen und ohne Bestätigung. Leite Thema, Zielgruppe, Anlass und Umfang aus der ersten Eingabe ab und triff sinnvolle Annahmen (typisch 6 bis 10 Folien). Nenne die Annahmen am Ende kurz.
 2. Schreibe die Markdown-Datei nach `decks/<name>/praesentation.md` (Format unten).
 3. Baue: `python3 build.py decks/<name>/praesentation.md decks/<name>/index.html`
 4. Prüfe die Meldung des Generators: Die Zahl der Folien muss zur geplanten Zahl passen. Stimmt sie nicht, ist die Markdown-Datei falsch aufgebaut (siehe Format).
