@@ -142,9 +142,14 @@ def placeholder(kind: str, key: str = "") -> str:
     return _svg_uri(svg)
 
 def asset_src(kind: str, name: str) -> str:
-    """Pfad zur echten Datei, falls vorhanden – sonst Platzhalter."""
-    if name and (Path(__file__).parent / "assets" / name).exists():
-        return f"assets/{name}"
+    """Echte Datei aus assets/ (eingebettet als Data-URI), falls vorhanden – sonst Platzhalter."""
+    if name:
+        f = Path(__file__).parent / "assets" / name
+        if f.is_file():
+            import base64, mimetypes
+            mime = mimetypes.guess_type(f.name)[0] or "application/octet-stream"
+            # Bild direkt einbetten, damit die HTML-Datei allein vollständig ist
+            return f"data:{mime};base64," + base64.b64encode(f.read_bytes()).decode("ascii")
     return placeholder(kind, name)
 
 
