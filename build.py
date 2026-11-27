@@ -1107,6 +1107,21 @@ def build_presentation(markdown_path: str, output_path: str = 'index.html'):
         for i, h in enumerate(slides_html, 1)
     ]
 
+    # Badge-Symbol: Titelbild der ersten Folie klein statt des grünen Kreises.
+    # Im Titelblock abschaltbar mit  badge_icon: false  oder anderes Bild mit  badge_icon: "datei.png"
+    badge_icon = pres.metadata.get('badge_icon', None)
+    if badge_icon is None and pres.slides:
+        badge_icon = pres.slides[0].get('illustration', '')
+    badge_css = ''
+    if badge_icon:
+        f = Path(__file__).parent / "assets" / str(badge_icon)
+        if f.is_file():
+            src = asset_src("illu", str(badge_icon))
+            badge_css = (
+                "<style>.badge-label::before{background:url('" + src + "') center/contain no-repeat;"
+                "border-radius:0;mix-blend-mode:multiply;}</style>"
+            )
+
     # Build HTML from template
     html = HTML_TEMPLATE.format(
         title=pres.metadata.get('title', 'Presentation'),
@@ -1123,6 +1138,8 @@ def build_presentation(markdown_path: str, output_path: str = 'index.html'):
         padding=f"{BRAND['layout']['padding']['vertical']} {BRAND['layout']['padding']['horizontal']}",
         slides_html='\n'.join(slides_html),
     )
+    if badge_css:
+        html = html.replace('</head>', badge_css + '</head>', 1)
 
     # Skalierung: alle px/rem im CSS an die Deck-Größe koppeln (Basis 1920x1080)
     import re as _re
