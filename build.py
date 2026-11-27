@@ -676,6 +676,11 @@ HTML_TEMPLATE = '''<!DOCTYPE html>
             z-index: 1;
         }}
 
+        /* Weiße Bildhintergründe ausblenden: Weiß wird durchsichtig, Linie und Farbe bleiben */
+        .title-illu-container, .team-illu-col, .chart-image, .column-icon {{
+            mix-blend-mode: multiply;
+        }}
+
         h1 {{
             font-size: {h1_size};
             font-weight: {h1_weight};
