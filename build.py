@@ -144,6 +144,43 @@ def placeholder(kind: str, key: str = "") -> str:
                "<path d='M32,66 L52,86 L90,40' fill='none' stroke='#000000' stroke-width='9' stroke-linecap='round' stroke-linejoin='round'/></svg>")
     return _svg_uri(svg)
 
+# Maximale Kantenlänge in Pixel je Bildart (Anzeigegröße auf der Folie + Reserve)
+MAX_IMAGE_SIDE = {"icon": 320, "badge": 160, "illu": 1400, "photo": 1920,
+                  "chart": 1600, "person": 640}
+
+
+def _shrink_image(f: Path, kind: str):
+    """Verkleinert ein Bild passend zur Bildart. Gibt (Mime, Bytes) zurück oder None,
+    wenn Pillow fehlt, das Bild kein Pixelbild ist oder die Verkleinerung nichts bringt."""
+    try:
+        from PIL import Image
+        import io
+    except Exception:
+        return None
+    if f.suffix.lower() not in (".png", ".jpg", ".jpeg", ".webp"):
+        return None
+    try:
+        im = Image.open(f)
+        im.load()
+        limit = MAX_IMAGE_SIDE.get(kind, 1400)
+        if max(im.size) > limit:
+            im.thumbnail((limit, limit), Image.LANCZOS)
+        has_alpha = im.mode in ("RGBA", "LA") or (im.mode == "P" and "transparency" in im.info)
+        buf = io.BytesIO()
+        if has_alpha:
+            im.convert("RGBA").save(buf, "PNG", optimize=True)
+            mime = "image/png"
+        else:
+            im.convert("RGB").save(buf, "JPEG", quality=90, optimize=True)
+            mime = "image/jpeg"
+        data = buf.getvalue()
+        if len(data) >= f.stat().st_size:
+            return None
+        return mime, data
+    except Exception:
+        return None
+
+
 def asset_src(kind: str, name: str) -> str:
     """Echte Datei aus assets/ (eingebettet als Data-URI), falls vorhanden – sonst Platzhalter."""
     if name:
@@ -151,8 +188,15 @@ def asset_src(kind: str, name: str) -> str:
         if f.is_file():
             import base64, mimetypes
             mime = mimetypes.guess_type(f.name)[0] or "application/octet-stream"
+            data = None
+            # Pixelbilder auf Anzeigegröße verkleinern, damit die HTML-Datei schlank bleibt
+            small = _shrink_image(f, kind)
+            if small:
+                mime, data = small
+            if data is None:
+                data = f.read_bytes()
             # Bild direkt einbetten, damit die HTML-Datei allein vollständig ist
-            return f"data:{mime};base64," + base64.b64encode(f.read_bytes()).decode("ascii")
+            return f"data:{mime};base64," + base64.b64encode(data).decode("ascii")
     return placeholder(kind, name)
 
 
@@ -1135,7 +1179,7 @@ def build_presentation(markdown_path: str, output_path: str = 'index.html'):
     if badge_icon:
         f = Path(__file__).parent / "assets" / str(badge_icon)
         if f.is_file():
-            src = asset_src("illu", str(badge_icon))
+            src = asset_src("badge", str(badge_icon))
             badge_css = (
                 "<style>.badge-label::before{background:url('" + src + "') center/contain no-repeat;"
                 "border-radius:0;mix-blend-mode:multiply;}</style>"
