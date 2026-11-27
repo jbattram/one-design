@@ -46,7 +46,7 @@ Layouts (`layout:`) und ihre Felder:
 - `chart_text`: headline, number (große Zahl), subtext, chart_image, chart_position (left/right), highlight.
 - `three_columns`: headline, columns (Liste mit title, icon, items), highlight.
 - `team_grid`: headline, illustration, people (Liste mit image, name, title), highlight.
-- Auf jeder Folie möglich: badge (Text neben dem Kreis unten rechts, Standard "All Hands 2026"), qr_code (URL).
+- Auf jeder Folie möglich: badge (Text neben dem Kreis unten rechts, ohne Angabe: Titel der Präsentation), qr_code (URL).
 
 ## Bilder
 Bilder werden nur mit dem Dateinamen angegeben (zum Beispiel `kaffee.png`) und liegen im Ordner `assets/`. Fehlt eine Datei, setzt der Generator automatisch einen Platzhalter ein. Die Präsentation lässt sich also immer bauen. Sag der Nutzerin, wenn noch Platzhalter drin sind.
@@ -54,6 +54,7 @@ Bilder werden nur mit dem Dateinamen angegeben (zum Beispiel `kaffee.png`) und l
 ## Regeln für Präsentationen
 - Pro Folie genau ein Schlüsselwort als `highlight`, wörtlich wie in der Überschrift. Es bekommt den Kreidestrich.
 - Überschriften kurz, möglichst zwei Zeilen.
-- Umfragefolien schlicht: Überschrift und nur die Frage, keine Anleitung.
+- Umfragefolien nutzen das Layout `title`: Überschrift und nur die Frage, keine Antwortoptionen, keine Anleitung, kein Bild.
 - Dramaturgie für Vorträge: Hook mit Wiedererkennung, These, Bruch, Auflösung, Praxis, ein Merksatz zum Schluss. Live-Umfragen einplanen.
+- Setze `badge` bei jeder Präsentation auf ein kurzes Stichwort zum Thema (zum Beispiel "Kaffeepause"), nie auf einen fremden Anlass wie "All Hands 2026". Dieselbe Angabe auf jeder Folie.
 - Das Badge unten rechts und die Foliennummer unten links setzt der Generator automatisch. Auf der ersten Folie fehlen beide.
