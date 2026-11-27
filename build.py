@@ -680,6 +680,10 @@ HTML_TEMPLATE = '''<!DOCTYPE html>
         .title-illu-container, .team-illu-col, .chart-image, .column-icon {{
             mix-blend-mode: multiply;
         }}
+        /* damit die Icons mit dem Farbkreis dahinter mischen, darf der Container keinen eigenen Stapel bilden */
+        .slide > .columns-container {{
+            z-index: auto !important;
+        }}
 
         h1 {{
             font-size: {h1_size};
