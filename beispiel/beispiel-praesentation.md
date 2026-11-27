@@ -8,7 +8,6 @@ headline: "Ein Beispiel für one.design"
 highlight: "Beispiel"
 subline: "So sieht eine Präsentation aus"
 illustration: "placeholder-hands.svg"
-badge: "Beispiel"
 ---
 
 ---
